@@ -20,6 +20,13 @@ class ProductPageLocators:
     MESSAGE_PRODUCT_NAME = (By.CSS_SELECTOR, "div.alertinner strong")
     BASKET_TOTAL = (By.CSS_SELECTOR, "div.alertinner p strong")
     SUCCESS_MESSAGE = (By.CSS_SELECTOR, "div.alert-success:nth-child(1)")
+    LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
 
 class BasePageLocators:
     USER_ICON = (By.CSS_SELECTOR, ".icon-user")
+    BASKET_LINK = (By.CSS_SELECTOR, "span.btn-group a.btn-default")
+
+
+class BasketPageLocators:
+    BASKET_ITEMS = (By.CSS_SELECTOR, ".basket-items")
+    EMPTY_BASKET_MESSAGE = (By.XPATH, "//p[contains(., 'Ваша корзина пуста')]")

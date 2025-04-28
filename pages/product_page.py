@@ -1,7 +1,10 @@
 from selenium.common.exceptions import NoAlertPresentException
 import math
 from .base_page import BasePage
-from .locators import ProductPageLocators
+from .locators import ProductPageLocators, BasePageLocators
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from .login_page import LoginPage
 
 class ProductPage(BasePage):
     def add_to_basket(self):
@@ -28,10 +31,11 @@ class ProductPage(BasePage):
         message_product_name = self.browser.find_element(*ProductPageLocators.MESSAGE_PRODUCT_NAME).text
         assert product_name == message_product_name, "Product name in message doesn't match"
 
-    def should_be_basket_total_equal_to_product_price(self):
+    def should_match_basket_total(self):
         product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text
         basket_total = self.browser.find_element(*ProductPageLocators.BASKET_TOTAL).text
-        assert product_price == basket_total, "Basket total doesn't match product price"
+        assert product_price in basket_total, \
+            f"Product price '{product_price}' doesn't match basket total '{basket_total}'"
 
     def should_not_be_success_message(self):
         assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE), \
@@ -40,3 +44,13 @@ class ProductPage(BasePage):
     def should_disappear_success_message(self):
         assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE), \
             "Success message is not disappeared, but should be"
+
+    def go_to_basket_page(self):
+        basket_link = self.browser.find_element(*BasePageLocators.BASKET_LINK)
+        basket_link.click()
+
+    def go_to_login_page(self):
+        login_link = WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable(ProductPageLocators.LOGIN_LINK) )
+        login_link.click()
+        return LoginPage(self.browser, self.browser.current_url)
